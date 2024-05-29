@@ -1,1 +1,1 @@
-# ManusMapGame
+# Manu's Map Game
