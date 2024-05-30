@@ -1,12 +1,20 @@
+from typing import Dict
+
 from fastapi import FastAPI
 
-__version__ = "0.0.1"
+from components.process import generate_question
 
-app = FastAPI(title="JaltolAI", version=__version__)
+__version__ = "1.0.0"
+
+app = FastAPI(title="Manu's Map Game", version=__version__)
+
 
 @app.get("/")
-def root():
-	return {
-        'title': "Manu's Map Game API",
-        'version': __version__
-    }
+def root() -> Dict[str, str]:
+    return {"title": "Manu's Map Game API", "version": __version__}
+
+
+@app.get("/question")
+async def question() -> Dict[str, str]:
+    start, end = await generate_question()
+    return {"start": start, "end": end}
