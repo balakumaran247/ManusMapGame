@@ -1,0 +1,10 @@
+{
+    "git": {
+        "deploymentEnabled": {
+            "question": false,
+            "result": false,
+            "precalculate": false,
+            "map": false
+        }
+    }
+}
