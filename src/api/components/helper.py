@@ -1,33 +1,34 @@
 import json
 import random
-from typing import Dict, List, Optional, Sequence, Tuple, overload
+from typing import Any, Dict, List, Optional, Sequence, Tuple, overload
 
-import aiofiles
-
-
-async def read_json(filepath):
-    async with aiofiles.open(filepath, mode="r") as file:
-        content = await file.read()
-    return json.loads(content)
+from pydantic import BaseModel
 
 
-@overload
-def make_choice(
-    primary: Sequence[str], supplementary: Optional[Dict[str, List[str]]] = None
-) -> Tuple[str, None]: ...
+class AnswerList(BaseModel):
+    start: str
+    end: str
+    item: List[str]
+
+
+def read_json(filepath: str) -> Dict[str, Any]:
+    with open(filepath, mode="r") as file:
+        return json.load(file)
 
 
 @overload
 def make_choice(
     primary: Sequence[str], supplementary: Dict[str, List[str]]
 ) -> Tuple[str, str]: ...
-
-
+@overload
 def make_choice(
     primary: Sequence[str], supplementary: Optional[Dict[str, List[str]]] = None
-) -> Tuple[str, Optional[str]]:
+) -> str: ...
+
+
+def make_choice(primary, supplementary=None):
     if not supplementary:
-        return random.choice(primary), None
+        return random.choice(primary)
     first_value: str = random.choice(primary)
     second_value: str = random.choice(
         tuple(set(primary) - set(supplementary.get(first_value, [])) - {first_value})
