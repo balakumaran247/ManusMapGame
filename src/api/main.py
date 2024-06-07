@@ -1,6 +1,7 @@
 from typing import Dict, List
 
 from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 
 from components.helper import AnswerList
 from components.process import answer_check, generate_question
@@ -8,6 +9,19 @@ from components.process import answer_check, generate_question
 __version__ = "1.0.0"
 
 app = FastAPI(title="Manu's Map Game", version=__version__)
+
+origins = [
+    "http://localhost:3000",
+    "https://manus-map-game.vercel.app",
+]
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["GET", "POST"],
+    allow_headers=["*"],
+)
 
 
 @app.get("/")
