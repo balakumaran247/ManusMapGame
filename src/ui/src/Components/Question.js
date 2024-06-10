@@ -1,12 +1,32 @@
-import React, { useContext, useEffect, useRef } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import { QuestionContext } from "../Context/QuestionContextProvider";
-import { Col, Container, Row } from "reactstrap";
+import { Col, Container, Row, Progress } from "reactstrap";
 import InputSection from "./InputSection";
 
 const Question = () => {
     const [question] = useContext(QuestionContext);
+    const [progress, setProgress] = useState(0);
     const LoadingScreen = useRef();
     const InputScreen = useRef();
+
+    useEffect(() => {
+        const duration = 2 * 60 * 1000; // 2 minutes in milliseconds
+        const interval = 100; // Update every 100ms
+        const totalSteps = duration / interval;
+
+        let currentStep = 0;
+
+        const timer = setInterval(() => {
+            currentStep += 1;
+            setProgress((currentStep / totalSteps) * 100);
+
+            if (currentStep >= totalSteps) {
+                clearInterval(timer);
+            }
+        }, interval);
+
+        return () => clearInterval(timer);
+    }, []);
 
     useEffect(() => {
         switch (question.start) {
@@ -29,18 +49,18 @@ const Question = () => {
                 <Container fluid className="d-flex">
                     <Row className="w-100 justify-content-center align-items-center">
                         <Col className="text-center">
-                            <p
-                                className="display-5 light-yellow"
-                                style={{
-                                    position: "absolute",
-                                    top: "50%",
-                                    left: "50%",
-                                    transform: "translate(-50%, -50%)",
-                                }}
-                            >
+                        <div style={{position: "absolute",top: "50%",left: "50%",transform: "translate(-50%, -50%)",}}>
+                            <p className="display-5 light-yellow">
                                 <i className="bi bi-hourglass-split"></i>{" "}
                                 Loading...
                             </p>
+                            <Progress
+                                animated
+                                color="warning"
+                                value={progress}
+                                className="mt-2"
+                            />
+                        </div>
                         </Col>
                     </Row>
                 </Container>
@@ -69,8 +89,9 @@ const Question = () => {
                             className="py-4 text-justify justify-content-center"
                         >
                             <p>
-                                Which countries should I pass through to travel
-                                by road from {question.start} to {question.end}?
+                                For traveling by road from {question.start}{" "}
+                                which countries to pass through to reach{" "}
+                                {question.end}?
                             </p>
                         </Col>
                     </Row>
