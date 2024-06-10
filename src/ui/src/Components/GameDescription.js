@@ -73,7 +73,7 @@ function GameDescription() {
                         tempor cillum. Commodo ullamco qui sunt fugiat ea ipsum
                         magna duis velit enim minim id velit.
                     </p>
-                    <div className="text-center">
+                    <div className="text-center mb-5">
                         <Button color="warning" outline onClick={changeStatus}>
                             Start <i className="bi bi-caret-right-fill"></i>
                         </Button>
