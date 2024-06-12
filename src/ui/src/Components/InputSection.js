@@ -37,6 +37,7 @@ const InputSection = () => {
         status === "started"
             ? setStatus("ended")
             : console.error("status should be started.");
+        handleClear();
     };
 
     const handleChange = (selected) => {
