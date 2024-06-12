@@ -22,9 +22,13 @@ const InputSection = () => {
                 const { data } = await Axios.post(`${api_url}/result`, {
                     start: question.start,
                     end: question.end,
-                    item: selectedOptions.map((option, index) => (option.label))
+                    item: selectedOptions.map((option, index) => option.label),
                 });
-                setAnswer({result: data.result, correct_path: data.correct_path, wrong_path: data.wrong_path});
+                setAnswer({
+                    result: data.result,
+                    correct_path: data.correct_path,
+                    wrong_path: data.wrong_path,
+                });
             } catch (error) {
                 console.error("Error fetching result:", error);
             }
@@ -70,7 +74,11 @@ const InputSection = () => {
                         color="primary"
                         outline
                         onClick={handleAdd}
-                        disabled={!selectedOption}
+                        disabled={
+                            !selectedOption ||
+                            selectedOption.value === question.start ||
+                            selectedOption.value === question.end
+                        }
                     >
                         <i className="bi bi-plus"></i>Add
                     </Button>
