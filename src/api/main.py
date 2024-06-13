@@ -37,7 +37,12 @@ def question() -> Dict[str, str]:
 
 @app.post("/result")
 def result(answers: AnswerList) -> Dict[str, (str | List[str])]:
-    verdict, correct_list, wrong_list = answer_check(
+    verdict, correct_list, wrong_list, shortest_path = answer_check(
         answers.start, answers.end, answers.item
     )
-    return {"result": verdict, "correct_path": correct_list, "wrong_path": wrong_list}
+    return {
+        "result": verdict,
+        "correct_path": correct_list,
+        "wrong_path": wrong_list,
+        "shortest_path": shortest_path,
+    }

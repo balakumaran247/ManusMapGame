@@ -2,6 +2,7 @@ import json
 import random
 from typing import Any, Dict, List, Optional, Sequence, Tuple, overload
 
+import networkx as nx
 from pydantic import BaseModel
 
 
@@ -34,3 +35,10 @@ def make_choice(primary, supplementary=None):
         tuple(set(primary) - set(supplementary.get(first_value, [])) - {first_value})
     )
     return first_value, second_value
+
+
+def get_shortestpath(start: str, end: str):
+    data = read_json(r"./data/neighbouring_countries_edges.json")
+    G = nx.Graph()
+    G.add_edges_from(data)
+    return nx.shortest_path(G, source=start, target=end)
