@@ -3,13 +3,13 @@ import React, { createContext, useState } from "react";
 export const AnswerContext = createContext();
 
 const AnswerContextProvider = ({ children }) => {
-    const [answer, setAnswer] = useState({
-        result: "none",
-        correct_path: "none",
-        wrong_path: "none",
-    });
+    const [result, setResult] = useState("none");
+    const [correctPath, setCorrectPath] = useState([]);
+    const [wrongPath, setWrongPath] = useState([]);
+    const [shortestPath, setShortestPath] = useState([]);
+    
     return (
-        <AnswerContext.Provider value={[answer, setAnswer]}>
+        <AnswerContext.Provider value={{ result, setResult, correctPath, setCorrectPath, wrongPath, setWrongPath, shortestPath, setShortestPath }}>
             {children}
         </AnswerContext.Provider>
     );
