@@ -35,12 +35,12 @@ function GameDescription() {
                     className="d-flex justify-content-center align-items-center"
                 >
                     <img
-                        src={require("../Resources/manu.png")}
+                        src={require("../Resources/profile.jpeg")}
                         style={{
-                            borderRadius: "50%",
+                            // borderRadius: "50%",
                             border: "5px solid #FEEFAD",
                             width: 325,
-                            height: 325,
+                            height: 432,
                             display: "block",
                         }}
                         alt="Manu"
@@ -51,17 +51,10 @@ function GameDescription() {
                     className="justify-content-center align-items-center"
                 >
                     <p className="text-justify text-muted">
-                        Aute elit fugiat duis adipisicing dolor. Ut excepteur
-                        anim sunt enim incididunt est duis. Pariatur enim aute
-                        ullamco deserunt.
+                        Manu loved maps. His photographic memory made him a master of geography. His favorite game was asking, "If you have to go from Singapore to London by road, which is the shortest route? Name all the countries." We played this game every Friday for eight years. If you ever got the order wrong, Manu would laugh and say, "How dumb can you be, to believe that India and Thailand share a border?" If you got it right, he'd add a twist: "There's a civil war in Syria; you need to go around it."
                     </p>
                     <p className="text-justify text-muted">
-                        Labore minim dolore ex ad dolor eu nostrud reprehenderit
-                        aliquip laborum dolor excepteur. Duis dolore pariatur
-                        culpa pariatur et exercitation commodo anim ad proident
-                        id et excepteur. Voluptate voluptate sit nulla
-                        exercitation qui duis non mollit occaecat sunt elit
-                        nostrud amet.
+                        Manu's superpower was bringing people together in meaningful ways. This game broke the ice and sparked conversations. Its purpose was to foster connections more than getting it right. This Friday, as you wind down into the weekend, play this game with your loved ones. Connect, laugh, and remember Manu through the joy of his favorite game. Enjoy!
                     </p>
                     <p className="text-justify text-muted">
                         Ex enim mollit laborum laborum. Sint culpa sunt ex
