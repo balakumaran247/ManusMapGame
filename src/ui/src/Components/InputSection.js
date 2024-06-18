@@ -11,7 +11,7 @@ import Axios from "axios";
 const InputSection = () => {
     let [status, setStatus] = useContext(StatusContext);
     const { api_url } = useContext(UrlContext);
-    let [, setAnswer] = useContext(AnswerContext);
+    const { setResult, setCorrectPath, setWrongPath, setShortestPath} = useContext(AnswerContext);
     const [question] = useContext(QuestionContext);
     const [selectedOption, setSelectedOption] = useState(null);
     const [selectedOptions, setSelectedOptions] = useState([]);
@@ -24,11 +24,11 @@ const InputSection = () => {
                     end: question.end,
                     item: selectedOptions.map((option, index) => option.label),
                 });
-                setAnswer({
-                    result: data.result,
-                    correct_path: data.correct_path,
-                    wrong_path: data.wrong_path,
-                });
+                console.log('got correct path:', data.correct_path);
+                setResult(data.result);
+                setCorrectPath(data.correct_path);
+                setWrongPath(data.wrong_path);
+                setShortestPath(data.shortest_path);
             } catch (error) {
                 console.error("Error fetching result:", error);
             }
