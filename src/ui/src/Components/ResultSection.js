@@ -8,15 +8,18 @@ import Axios from "axios";
 
 const ResultSection = () => {
     let [status, setStatus] = useContext(StatusContext);
-    let [answer, setAnswer] = useContext(AnswerContext);
+    const { result, setResult, correctPath, setCorrectPath, wrongPath, setWrongPath, shortestPath, setShortestPath } = useContext(AnswerContext);
     let [, setQuestion] = useContext(QuestionContext);
     const { api_url } = useContext(UrlContext);
     const LoadingScreen = useRef();
     const ResultScreen = useRef();
 
     const changeStatus = () => {
-        setQuestion({start: "none", end: "none"});
-        setAnswer({result: "none", correct_path: "none", wrong_path: "none"});
+        setQuestion({ start: "none", end: "none" });
+        setResult("none");
+        setCorrectPath([]);
+        setWrongPath([]);
+        setShortestPath([]);
         const fetchQuestion = async () => {
             try {
                 const { data } = await Axios.get(`${api_url}/question`);
@@ -32,7 +35,7 @@ const ResultSection = () => {
     };
 
     useEffect(() => {
-        switch (answer.result) {
+        switch (result) {
             case "none":
                 LoadingScreen.current.style.display = "";
                 ResultScreen.current.style.display = "none";
@@ -40,12 +43,11 @@ const ResultSection = () => {
             default:
                 LoadingScreen.current.style.display = "none";
                 ResultScreen.current.style.display = "";
-                console.log("Answer entered: ", answer);
         }
         return () => {
             console.log("UI of Result Section is updated");
         };
-    }, [answer]);
+    }, [result]);
 
     return (
         <div>
@@ -53,33 +55,92 @@ const ResultSection = () => {
                 <Container fluid className="d-flex">
                     <Row className="w-100 justify-content-center align-items-center">
                         <Col className="text-center">
-                        <div style={{position: "absolute",top: "50%",left: "50%",transform: "translate(-50%, -50%)",}}>
-                            <p className="display-5 light-yellow">
-                                <i className="bi bi-hourglass-split"></i>{" "}
-                                Loading...
-                            </p>
-                        </div>
+                            <div
+                                style={{
+                                    position: "absolute",
+                                    top: "50%",
+                                    left: "50%",
+                                    transform: "translate(-50%, -50%)",
+                                }}
+                            >
+                                <p className="display-5 light-yellow">
+                                    <i className="bi bi-hourglass-split"></i>{" "}
+                                    Loading...
+                                </p>
+                            </div>
                         </Col>
                     </Row>
                 </Container>
             </div>
             <div ref={ResultScreen} className="text-center my-5">
-        <Container className="text-center">
-            <Row>
-                <Col>{answer.result}</Col>
-            </Row>
-            <Row>
-                <Col>
-                    <Button color="warning" outline onClick={changeStatus}>
-                        Restart <i className="bi bi-arrow-clockwise"></i>
-                    </Button>
-                </Col>
-            </Row>
-            <Row>
-                <Col>Result Tree</Col>
-            </Row>
-        </Container>
-        </div>
+                <Container className="text-center">
+                    <Row>
+                        <Col>{result}</Col>
+                    </Row>
+                    <Row>
+                        <Col>
+                            <Button
+                                color="warning"
+                                outline
+                                onClick={changeStatus}
+                            >
+                                Restart{" "}
+                                <i className="bi bi-arrow-clockwise"></i>
+                            </Button>
+                        </Col>
+                    </Row>
+                    <Row>
+                        <Col>
+        {console.log('final answer:', {r: result, c: correctPath, w: wrongPath, s: shortestPath})}
+                            <div>
+                                <p>
+                                    {correctPath.map((option, index) => (
+                                            <span key={index}>
+                                                {option}
+                                                {index <
+                                                    correctPath.length -
+                                                        1 && (
+                                                    <i className="bi bi-arrow-right-short text-success"></i>
+                                                )}
+                                            </span>
+                                        ))}
+                                    {wrongPath.length > 0 && (
+                                        <>
+                                            <i className="bi bi-x text-danger"></i>
+                                            {wrongPath.map((option, index) => (
+                                                    <span key={index}>
+                                                        {option}
+                                                        {index <
+                                                            wrongPath.length -
+                                                                1 && (
+                                                            <i className="bi bi-x text-danger"></i>
+                                                        )}
+                                                    </span>
+                                                ))}
+                                        </>
+                                    )}
+                                    </p>
+                                    <p>
+                                    {shortestPath.length > 0 && (
+                                        <>
+                                        <span className="text-success">Correct Path:{" "}</span>
+                                        {shortestPath.map((option, index) => (
+                                            <span key={index}>
+                                                {option}
+                                                {index <
+                                                    shortestPath.length -
+                                                        1 && (
+                                                    <i className="bi bi-arrow-right-short text-success"></i>
+                                                )}
+                                            </span>
+                                        ))}
+                                        </>
+                                    )}</p>
+                            </div>
+                        </Col>
+                    </Row>
+                </Container>
+            </div>
         </div>
     );
 };
