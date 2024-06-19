@@ -1,6 +1,7 @@
 from typing import List, Tuple
 
-from components.helper import get_shortestpath, make_choice, read_json
+from components.helper import (get_geojson, get_shortestpath, make_choice,
+                                read_json)
 
 
 def generate_question() -> Tuple[str, str]:
@@ -16,9 +17,7 @@ def generate_question() -> Tuple[str, str]:
     return make_choice(countries_list, neighbour_data)
 
 
-def answer_check(
-    start: str, end: str, answer_list: List[str]
-) -> Tuple[str, List[str], List[str], List[str]]:
+def answer_check(start: str, end: str, answer_list: List[str]):
     graph_dict = read_json(r"./data/neighbouring_countries.json")
     answer_path = [start] + answer_list + [end]
     correct_list = [start]
@@ -33,7 +32,9 @@ def answer_check(
     if len(correct_list) == len(answer_path):
         result = "You Won"
         shortest_path = []
+        boundaries = get_geojson(correct_list)
     else:
         result = "You Lost"
         shortest_path = get_shortestpath(start, end)
-    return result, correct_list, remaining_list, shortest_path
+        boundaries = get_geojson(shortest_path)
+    return result, correct_list, remaining_list, shortest_path, boundaries
