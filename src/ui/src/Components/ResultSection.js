@@ -4,11 +4,25 @@ import { StatusContext } from "../Context/StatusContextProvider";
 import { AnswerContext } from "../Context/AnswerContextProvider";
 import { QuestionContext } from "../Context/QuestionContextProvider";
 import { UrlContext } from "../Context/UrlContextProvider";
+import { MapContainer, TileLayer, GeoJSON } from "react-leaflet";
+// import L from 'leaflet';
+import "leaflet/dist/leaflet.css";
 import Axios from "axios";
 
 const ResultSection = () => {
     let [status, setStatus] = useContext(StatusContext);
-    const { result, setResult, correctPath, setCorrectPath, wrongPath, setWrongPath, shortestPath, setShortestPath } = useContext(AnswerContext);
+    const {
+        result,
+        setResult,
+        correctPath,
+        setCorrectPath,
+        wrongPath,
+        setWrongPath,
+        shortestPath,
+        setShortestPath,
+        boundaries,
+        setBoundaries,
+    } = useContext(AnswerContext);
     let [, setQuestion] = useContext(QuestionContext);
     const { api_url } = useContext(UrlContext);
     const LoadingScreen = useRef();
@@ -20,6 +34,7 @@ const ResultSection = () => {
         setCorrectPath([]);
         setWrongPath([]);
         setShortestPath([]);
+        setBoundaries(null);
         const fetchQuestion = async () => {
             try {
                 const { data } = await Axios.get(`${api_url}/question`);
@@ -48,6 +63,10 @@ const ResultSection = () => {
             console.log("UI of Result Section is updated");
         };
     }, [result]);
+
+    const styleFunction = (feature) => {
+        return { color: feature.properties.color };
+    };
 
     return (
         <div>
@@ -91,52 +110,83 @@ const ResultSection = () => {
                     </Row>
                     <Row>
                         <Col>
-        {console.log('final answer:', {r: result, c: correctPath, w: wrongPath, s: shortestPath})}
+                            {console.log("final answer:", {
+                                r: result,
+                                c: correctPath,
+                                w: wrongPath,
+                                s: shortestPath,
+                                b: boundaries,
+                            })}
                             <div>
                                 <p>
                                     {correctPath.map((option, index) => (
-                                            <span key={index}>
-                                                {option}
-                                                {index <
-                                                    correctPath.length -
-                                                        1 && (
-                                                    <i className="bi bi-arrow-right-short text-success"></i>
-                                                )}
-                                            </span>
-                                        ))}
+                                        <span key={index}>
+                                            {option}
+                                            {index < correctPath.length - 1 && (
+                                                <i className="bi bi-arrow-right-short text-success"></i>
+                                            )}
+                                        </span>
+                                    ))}
                                     {wrongPath.length > 0 && (
                                         <>
                                             <i className="bi bi-x text-danger"></i>
                                             {wrongPath.map((option, index) => (
+                                                <span key={index}>
+                                                    {option}
+                                                    {index <
+                                                        wrongPath.length -
+                                                            1 && (
+                                                        <i className="bi bi-x text-danger"></i>
+                                                    )}
+                                                </span>
+                                            ))}
+                                        </>
+                                    )}
+                                </p>
+                                <p>
+                                    {shortestPath.length > 0 && (
+                                        <>
+                                            <span className="text-success">
+                                                Correct Path:{" "}
+                                            </span>
+                                            {shortestPath.map(
+                                                (option, index) => (
                                                     <span key={index}>
                                                         {option}
                                                         {index <
-                                                            wrongPath.length -
+                                                            shortestPath.length -
                                                                 1 && (
-                                                            <i className="bi bi-x text-danger"></i>
+                                                            <i className="bi bi-arrow-right-short text-success"></i>
                                                         )}
                                                     </span>
-                                                ))}
+                                                )
+                                            )}
                                         </>
                                     )}
-                                    </p>
-                                    <p>
-                                    {shortestPath.length > 0 && (
-                                        <>
-                                        <span className="text-success">Correct Path:{" "}</span>
-                                        {shortestPath.map((option, index) => (
-                                            <span key={index}>
-                                                {option}
-                                                {index <
-                                                    shortestPath.length -
-                                                        1 && (
-                                                    <i className="bi bi-arrow-right-short text-success"></i>
-                                                )}
-                                            </span>
-                                        ))}
-                                        </>
-                                    )}</p>
+                                </p>
                             </div>
+                        </Col>
+                    </Row>
+                    <Row className="w-100 justify-content-center align-items-center">
+                        <Col md="8">
+                            <MapContainer
+                                center={[22.3511148, 78.6677428]}
+                                zoom={5}
+                                scrollWheelZoom={false}
+                                style={{ height: "500px", width: "100%" }}
+                            >
+                                <TileLayer
+                                    attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+                                    url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                                />
+                                {boundaries && (
+                                    <GeoJSON
+                                        data={boundaries}
+                                        style={styleFunction}
+                                        // onEachFeature={onEachFeature}
+                                    />
+                                )}
+                            </MapContainer>
                         </Col>
                     </Row>
                 </Container>
