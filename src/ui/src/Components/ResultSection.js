@@ -68,6 +68,12 @@ const ResultSection = () => {
         return { color: feature.properties.color };
     };
 
+    const onEachFeature = (feature, layer) => {
+        if (feature.properties && feature.properties.NAME_EN) {
+            layer.bindPopup(feature.properties.NAME_EN);
+        }
+    };
+
     return (
         <div>
             <div ref={LoadingScreen}>
@@ -183,7 +189,7 @@ const ResultSection = () => {
                                     <GeoJSON
                                         data={boundaries}
                                         style={styleFunction}
-                                        // onEachFeature={onEachFeature}
+                                        onEachFeature={onEachFeature}
                                     />
                                 )}
                             </MapContainer>
