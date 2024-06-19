@@ -49,5 +49,12 @@ def get_geojson(filter_list):
     filtered_dicts = [
         d for d in data["features"] if d.get("properties").get("NAME_EN") in filter_list
     ]
+    for feat in filtered_dicts:
+        if feat.get("properties").get("NAME_EN") == filter_list[0]:
+            feat["properties"]["color"] = "red"
+        elif feat.get("properties").get("NAME_EN") == filter_list[-1]:
+            feat["properties"]["color"] = "green"
+        else:
+            feat["properties"]["color"] = "yellow"
     data["features"] = filtered_dicts
     return data
