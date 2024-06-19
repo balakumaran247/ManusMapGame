@@ -42,3 +42,12 @@ def get_shortestpath(start: str, end: str):
     G = nx.Graph()
     G.add_edges_from(data)
     return nx.shortest_path(G, source=start, target=end)
+
+
+def get_geojson(filter_list):
+    data = read_json(r"./data/countriesMap.geojson")
+    filtered_dicts = [
+        d for d in data["features"] if d.get("properties").get("NAME_EN") in filter_list
+    ]
+    data["features"] = filtered_dicts
+    return data
