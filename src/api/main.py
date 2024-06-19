@@ -1,4 +1,4 @@
-from typing import Dict, List
+from typing import Any, Dict
 
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
@@ -36,8 +36,8 @@ def question() -> Dict[str, str]:
 
 
 @app.post("/result")
-def result(answers: AnswerList) -> Dict[str, (str | List[str])]:
-    verdict, correct_list, wrong_list, shortest_path = answer_check(
+def result(answers: AnswerList) -> Dict[str, Any]:
+    verdict, correct_list, wrong_list, shortest_path, boundaries = answer_check(
         answers.start, answers.end, answers.item
     )
     return {
@@ -45,4 +45,5 @@ def result(answers: AnswerList) -> Dict[str, (str | List[str])]:
         "correct_path": correct_list,
         "wrong_path": wrong_list,
         "shortest_path": shortest_path,
+        "boundaries": boundaries,
     }
