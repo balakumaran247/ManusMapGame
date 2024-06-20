@@ -17,6 +17,15 @@ def generate_question() -> Tuple[str, str]:
     return make_choice(countries_list, neighbour_data)
 
 
+def check_question(start: str, end: str) -> bool:
+    continent_data = read_json(r"./data/continent_countries.json")
+    check_lists = [
+        continent_data["America"],
+        continent_data["Africa"] + continent_data["Asia"] + continent_data["Europe"],
+    ]
+    return any(start in l and end in l for l in check_lists)
+
+
 def answer_check(start: str, end: str, answer_list: List[str]):
     graph_dict = read_json(r"./data/neighbouring_countries.json")
     answer_path = [start] + answer_list + [end]

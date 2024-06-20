@@ -4,7 +4,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from components.helper import AnswerList
-from components.process import answer_check, generate_question
+from components.process import answer_check, check_question, generate_question
 
 __version__ = "1.0.0"
 
@@ -33,6 +33,11 @@ def root() -> Dict[str, str]:
 def question() -> Dict[str, str]:
     start, end = generate_question()
     return {"start": start, "end": end}
+
+
+@app.get("/check")
+def check(start: str, end: str) -> bool:
+    return check_question(start, end)
 
 
 @app.post("/result")
