@@ -19,11 +19,14 @@ def generate_question() -> Tuple[str, str]:
 
 def check_question(start: str, end: str) -> bool:
     continent_data = read_json(r"./data/continent_countries.json")
+    neighbour = read_json(r"./data/neighbouring_countries.json")
     check_lists = [
         continent_data["America"],
         continent_data["Africa"] + continent_data["Asia"] + continent_data["Europe"],
     ]
-    return any(start in l and end in l for l in check_lists)
+    return any(
+        start in l and end in l and end not in neighbour[start] for l in check_lists
+    )
 
 
 def answer_check(start: str, end: str, answer_list: List[str]):
