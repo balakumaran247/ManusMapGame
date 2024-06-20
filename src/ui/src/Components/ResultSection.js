@@ -4,8 +4,8 @@ import { StatusContext } from "../Context/StatusContextProvider";
 import { AnswerContext } from "../Context/AnswerContextProvider";
 import { QuestionContext } from "../Context/QuestionContextProvider";
 import { UrlContext } from "../Context/UrlContextProvider";
-import { MapContainer, TileLayer, GeoJSON } from "react-leaflet";
-// import L from 'leaflet';
+import { MapContainer, TileLayer, GeoJSON, useMap } from "react-leaflet";
+import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 import Axios from "axios";
 
@@ -72,6 +72,18 @@ const ResultSection = () => {
         if (feature.properties && feature.properties.NAME_EN) {
             layer.bindPopup(feature.properties.NAME_EN);
         }
+    };
+
+    const FlyToFeature = ({ featureData }) => {
+        const map = useMap();
+        useEffect(() => {
+            if (featureData) {
+                const geoJsonLayer = L.geoJSON(featureData);
+                const bounds = geoJsonLayer.getBounds();
+                map.flyToBounds(bounds, { padding: [50, 50] });
+            }
+        }, [featureData, map]);
+        return null;
     };
 
     return (
@@ -191,6 +203,9 @@ const ResultSection = () => {
                                         style={styleFunction}
                                         onEachFeature={onEachFeature}
                                     />
+                                )}
+                                {boundaries && (
+                                    <FlyToFeature featureData={boundaries} />
                                 )}
                             </MapContainer>
                         </Col>
