@@ -22,6 +22,8 @@ const ResultSection = () => {
         setShortestPath,
         boundaries,
         setBoundaries,
+        centroids,
+        setCentroids,
     } = useContext(AnswerContext);
     let [, setQuestion] = useContext(QuestionContext);
     const { api_url } = useContext(UrlContext);
@@ -35,6 +37,7 @@ const ResultSection = () => {
         setWrongPath([]);
         setShortestPath([]);
         setBoundaries(null);
+        setCentroids(null);
         const fetchQuestion = async () => {
             try {
                 const { data } = await Axios.get(`${api_url}/question`);
@@ -134,6 +137,7 @@ const ResultSection = () => {
                                 w: wrongPath,
                                 s: shortestPath,
                                 b: boundaries,
+                                p: centroids,
                             })}
                             <div>
                                 <p>
@@ -200,6 +204,13 @@ const ResultSection = () => {
                                 {boundaries && (
                                     <GeoJSON
                                         data={boundaries}
+                                        style={styleFunction}
+                                        onEachFeature={onEachFeature}
+                                    />
+                                )}
+                                {centroids && (
+                                    <GeoJSON
+                                        data={centroids}
                                         style={styleFunction}
                                         onEachFeature={onEachFeature}
                                     />
