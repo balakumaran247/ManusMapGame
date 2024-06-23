@@ -2,6 +2,7 @@ from typing import Any, Dict
 
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import FileResponse
 
 from components.helper import AnswerList
 from components.process import answer_check, check_question, generate_question
@@ -9,6 +10,7 @@ from components.process import answer_check, check_question, generate_question
 __version__ = "1.0.0"
 
 app = FastAPI(title="Manu's Map Game", version=__version__)
+favicon_path = "favicon.ico"
 
 origins = [
     "http://localhost:3000",
@@ -31,6 +33,11 @@ def root() -> Dict[str, str]:
         "version": __version__,
         "url": ", ".join(origins[1:]),
     }
+
+
+@app.get("/favicon.ico", include_in_schema=False)
+async def favicon():
+    return FileResponse(favicon_path)
 
 
 @app.get("/question")
