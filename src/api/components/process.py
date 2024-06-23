@@ -1,7 +1,12 @@
 from typing import List, Tuple
 
-from components.helper import (get_geojson, get_shortestpath, make_choice,
-                                read_json)
+from components.helper import (
+    get_centroids,
+    get_geojson,
+    get_shortestpath,
+    make_choice,
+    read_json,
+)
 
 
 def generate_question() -> Tuple[str, str]:
@@ -45,8 +50,10 @@ def answer_check(start: str, end: str, answer_list: List[str]):
         result = "You Won"
         shortest_path = []
         boundaries = get_geojson(correct_list)
+        centroids = get_centroids(correct_list)
     else:
         result = "You Lost"
         shortest_path = get_shortestpath(start, end)
         boundaries = get_geojson(shortest_path)
-    return result, correct_list, remaining_list, shortest_path, boundaries
+        centroids = get_centroids(correct_list, remaining_list)
+    return result, correct_list, remaining_list, shortest_path, boundaries, centroids

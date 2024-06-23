@@ -58,3 +58,23 @@ def get_geojson(filter_list):
             feat["properties"]["color"] = "yellow"
     data["features"] = filtered_dicts
     return data
+
+
+def get_centroids(correct_list, wrong_list=None):
+    if not wrong_list:
+        wrong_list = []
+    data = read_json(r"./data/centroids.geojson")
+    filtered_dicts = [
+        d
+        for d in data["features"]
+        if d.get("properties").get("NAME_EN") in correct_list + wrong_list
+    ]
+    for feat in filtered_dicts:
+        if feat.get("properties").get("NAME_EN") in wrong_list:
+            feat["properties"]["color"] = "red"
+        elif feat.get("properties").get("NAME_EN") in correct_list:
+            feat["properties"]["color"] = "green"
+        else:
+            feat["properties"]["color"] = "yellow"
+    data["features"] = filtered_dicts
+    return data

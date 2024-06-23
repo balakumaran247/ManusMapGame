@@ -26,7 +26,11 @@ app.add_middleware(
 
 @app.get("/")
 def root() -> Dict[str, str]:
-    return {"title": "Manu's Map Game API", "version": __version__}
+    return {
+        "title": "Manu's Map Game API",
+        "version": __version__,
+        "url": ", ".join(origins[1:]),
+    }
 
 
 @app.get("/question")
@@ -42,8 +46,8 @@ def check(start: str, end: str) -> bool:
 
 @app.post("/result")
 def result(answers: AnswerList) -> Dict[str, Any]:
-    verdict, correct_list, wrong_list, shortest_path, boundaries = answer_check(
-        answers.start, answers.end, answers.item
+    verdict, correct_list, wrong_list, shortest_path, boundaries, centroids = (
+        answer_check(answers.start, answers.end, answers.item)
     )
     return {
         "result": verdict,
@@ -51,4 +55,5 @@ def result(answers: AnswerList) -> Dict[str, Any]:
         "wrong_path": wrong_list,
         "shortest_path": shortest_path,
         "boundaries": boundaries,
+        "centroids": centroids,
     }
