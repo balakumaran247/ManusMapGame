@@ -11,7 +11,14 @@ import Axios from "axios";
 const InputSection = () => {
     let [status, setStatus] = useContext(StatusContext);
     const { api_url } = useContext(UrlContext);
-    const { setResult, setCorrectPath, setWrongPath, setShortestPath} = useContext(AnswerContext);
+    const {
+        setResult,
+        setCorrectPath,
+        setWrongPath,
+        setShortestPath,
+        setBoundaries,
+        setCentroids,
+    } = useContext(AnswerContext);
     const [question] = useContext(QuestionContext);
     const [selectedOption, setSelectedOption] = useState(null);
     const [selectedOptions, setSelectedOptions] = useState([]);
@@ -24,11 +31,13 @@ const InputSection = () => {
                     end: question.end,
                     item: selectedOptions.map((option, index) => option.label),
                 });
-                console.log('got correct path:', data.correct_path);
+                console.log("got correct path:", data.correct_path);
                 setResult(data.result);
                 setCorrectPath(data.correct_path);
                 setWrongPath(data.wrong_path);
                 setShortestPath(data.shortest_path);
+                setBoundaries(data.boundaries);
+                setCentroids(data.centroids);
             } catch (error) {
                 console.error("Error fetching result:", error);
             }
@@ -119,9 +128,7 @@ const InputSection = () => {
                             {selectedOptions.map((option, index) => (
                                 <span key={option.value}>
                                     {option.label}
-                                    {/* {index < selectedOptions.length - 1 && ( */}
                                     <i className="bi bi-arrow-right-short strong-yellow"></i>
-                                    {/* )} */}
                                 </span>
                             ))}
                             <i className="bi bi-plus-circle text-primary"></i>

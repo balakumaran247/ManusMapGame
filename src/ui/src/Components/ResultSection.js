@@ -9,17 +9,27 @@ import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 import Axios from "axios";
 
-import icon from "leaflet/dist/images/marker-icon.png";
-import iconShadow from "leaflet/dist/images/marker-shadow.png";
+import ricon from "../Resources/marker-icon-red.png";
+import gicon from "../Resources/marker-icon-green.png";
+import shadow from "../Resources/marker-shadow.png";
 
-let DefaultIcon = L.icon({
-    iconUrl: icon,
-    shadowUrl: iconShadow,
+let RedIcon = L.icon({
+    iconUrl: ricon,
+    shadowUrl: shadow,
     iconSize: [25, 41],
     iconAnchor: [12, 41],
+    popupAnchor: [1, -34],
+    shadowSize: [41, 41],
 });
 
-L.Marker.prototype.options.icon = DefaultIcon;
+let GreenIcon = L.icon({
+    iconUrl: gicon,
+    shadowUrl: shadow,
+    iconSize: [25, 41],
+    iconAnchor: [12, 41],
+    popupAnchor: [1, -34],
+    shadowSize: [41, 41],
+});
 
 const ResultSection = () => {
     let [status, setStatus] = useContext(StatusContext);
@@ -83,6 +93,17 @@ const ResultSection = () => {
         return { color: feature.properties.color };
     };
 
+    const onEachMarker = (feature, layer) => {
+        if (feature.properties.color === "red") {
+            layer.setIcon(RedIcon);
+        } else {
+            layer.setIcon(GreenIcon);
+        }
+        if (feature.properties && feature.properties.NAME_EN) {
+            layer.bindPopup(feature.properties.NAME_EN);
+        }
+    };
+
     const onEachFeature = (feature, layer) => {
         if (feature.properties && feature.properties.NAME_EN) {
             layer.bindPopup(feature.properties.NAME_EN);
@@ -100,6 +121,9 @@ const ResultSection = () => {
         }, [featureData, map]);
         return null;
     };
+
+    const textColorClass =
+        result === "You Lost" ? "text-danger" : "text-success";
 
     return (
         <div>
@@ -127,10 +151,14 @@ const ResultSection = () => {
             <div ref={ResultScreen} className="text-center my-5">
                 <Container className="text-center">
                     <Row>
-                        <Col>{result}</Col>
+                        <Col>
+                            <p className={`display-5 ${textColorClass}`}>
+                                {result}
+                            </p>
+                        </Col>
                     </Row>
                     <Row>
-                        <Col>
+                        <Col className="my-3">
                             <Button
                                 color="warning"
                                 outline
@@ -223,8 +251,7 @@ const ResultSection = () => {
                                 {centroids && (
                                     <GeoJSON
                                         data={centroids}
-                                        style={styleFunction}
-                                        onEachFeature={onEachFeature}
+                                        onEachFeature={onEachMarker}
                                     />
                                 )}
                                 {boundaries && (
