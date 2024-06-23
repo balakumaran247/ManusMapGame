@@ -1,47 +1,40 @@
-import React, { useContext, useEffect, useRef, useState } from "react";
+import React, { useContext, useEffect, useRef } from "react";
 import { QuestionContext } from "../Context/QuestionContextProvider";
-import { Col, Container, Row, Progress } from "reactstrap";
+import { Button, Col, Container, Row } from "reactstrap";
 import InputSection from "./InputSection";
+import ChangeQuestion from "./ChangeQuestion";
 
 const Question = () => {
-    const [question] = useContext(QuestionContext);
-    const [progress, setProgress] = useState(0);
+    const [question, setQuestion] = useContext(QuestionContext);
     const LoadingScreen = useRef();
     const InputScreen = useRef();
-
-    useEffect(() => {
-        const duration = 2 * 60 * 1000; // 2 minutes in milliseconds
-        const interval = 100; // Update every 100ms
-        const totalSteps = duration / interval;
-
-        let currentStep = 0;
-
-        const timer = setInterval(() => {
-            currentStep += 1;
-            setProgress((currentStep / totalSteps) * 100);
-
-            if (currentStep >= totalSteps) {
-                clearInterval(timer);
-            }
-        }, interval);
-
-        return () => clearInterval(timer);
-    }, []);
+    const ChangeScreen = useRef();
 
     useEffect(() => {
         switch (question.start) {
             case "none":
                 LoadingScreen.current.style.display = "";
                 InputScreen.current.style.display = "none";
+                ChangeScreen.current.style.display = "none";
+                break;
+            case "toChange":
+                LoadingScreen.current.style.display = "none";
+                InputScreen.current.style.display = "none";
+                ChangeScreen.current.style.display = "";
                 break;
             default:
                 LoadingScreen.current.style.display = "none";
                 InputScreen.current.style.display = "";
+                ChangeScreen.current.style.display = "none";
         }
         return () => {
             console.log("UI of Input Section is updated");
         };
     }, [question]);
+
+    const toChangeQuestion = () => {
+        setQuestion({ start: "toChange", end: "toChange" });
+    };
 
     return (
         <div>
@@ -49,21 +42,25 @@ const Question = () => {
                 <Container fluid className="d-flex">
                     <Row className="w-100 justify-content-center align-items-center">
                         <Col className="text-center">
-                        <div style={{position: "absolute",top: "50%",left: "50%",transform: "translate(-50%, -50%)",}}>
-                            <p className="display-5 light-yellow">
-                                <i className="bi bi-hourglass-split"></i>{" "}
-                                Loading...
-                            </p>
-                            <Progress
-                                animated
-                                color="warning"
-                                value={progress}
-                                className="mt-2"
-                            />
-                        </div>
+                            <div
+                                style={{
+                                    position: "absolute",
+                                    top: "50%",
+                                    left: "50%",
+                                    transform: "translate(-50%, -50%)",
+                                }}
+                            >
+                                <p className="display-5 light-yellow">
+                                    <i className="bi bi-hourglass-split"></i>{" "}
+                                    Loading...
+                                </p>
+                            </div>
                         </Col>
                     </Row>
                 </Container>
+            </div>
+            <div ref={ChangeScreen}>
+                <ChangeQuestion />
             </div>
             <div ref={InputScreen} className="text-center my-5">
                 <Container>
@@ -93,6 +90,14 @@ const Question = () => {
                                 which countries to pass through to reach{" "}
                                 {question.end}?
                             </p>
+                            <div className="text-center mb-5">
+                                <Button
+                                    color="secondary"
+                                    onClick={toChangeQuestion}
+                                >
+                                    Change Question
+                                </Button>
+                            </div>
                         </Col>
                     </Row>
                 </Container>
