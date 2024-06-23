@@ -11,7 +11,14 @@ import Axios from "axios";
 const InputSection = () => {
     let [status, setStatus] = useContext(StatusContext);
     const { api_url } = useContext(UrlContext);
-    let [, setAnswer] = useContext(AnswerContext);
+    const {
+        setResult,
+        setCorrectPath,
+        setWrongPath,
+        setShortestPath,
+        setBoundaries,
+        setCentroids,
+    } = useContext(AnswerContext);
     const [question] = useContext(QuestionContext);
     const [selectedOption, setSelectedOption] = useState(null);
     const [selectedOptions, setSelectedOptions] = useState([]);
@@ -22,9 +29,15 @@ const InputSection = () => {
                 const { data } = await Axios.post(`${api_url}/result`, {
                     start: question.start,
                     end: question.end,
-                    item: selectedOptions.map((option, index) => (option.label))
+                    item: selectedOptions.map((option, index) => option.label),
                 });
-                setAnswer({result: data.result, correct_path: data.correct_path, wrong_path: data.wrong_path});
+                console.log("got correct path:", data.correct_path);
+                setResult(data.result);
+                setCorrectPath(data.correct_path);
+                setWrongPath(data.wrong_path);
+                setShortestPath(data.shortest_path);
+                setBoundaries(data.boundaries);
+                setCentroids(data.centroids);
             } catch (error) {
                 console.error("Error fetching result:", error);
             }
@@ -33,6 +46,7 @@ const InputSection = () => {
         status === "started"
             ? setStatus("ended")
             : console.error("status should be started.");
+        handleClear();
     };
 
     const handleChange = (selected) => {
@@ -70,7 +84,11 @@ const InputSection = () => {
                         color="primary"
                         outline
                         onClick={handleAdd}
-                        disabled={!selectedOption}
+                        disabled={
+                            !selectedOption ||
+                            selectedOption.value === question.start ||
+                            selectedOption.value === question.end
+                        }
                     >
                         <i className="bi bi-plus"></i>Add
                     </Button>
@@ -110,9 +128,7 @@ const InputSection = () => {
                             {selectedOptions.map((option, index) => (
                                 <span key={option.value}>
                                     {option.label}
-                                    {/* {index < selectedOptions.length - 1 && ( */}
                                     <i className="bi bi-arrow-right-short strong-yellow"></i>
-                                    {/* )} */}
                                 </span>
                             ))}
                             <i className="bi bi-plus-circle text-primary"></i>

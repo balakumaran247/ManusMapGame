@@ -9,3 +9,17 @@
 .light-yellow {
     color: #feefad;
 }
+
+.github-icon {
+    position: fixed;
+    top: 5px;
+    right: 15px;
+    font-size: 1.5rem;
+    cursor: pointer;
+    color: #fdde55;
+    z-index: 1000;
+}
+
+.github-icon:hover {
+    color: black;
+}

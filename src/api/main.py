@@ -1,10 +1,10 @@
-from typing import Dict, List
+from typing import Any, Dict
 
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from components.helper import AnswerList
-from components.process import answer_check, generate_question
+from components.process import answer_check, check_question, generate_question
 
 __version__ = "1.0.0"
 
@@ -26,7 +26,11 @@ app.add_middleware(
 
 @app.get("/")
 def root() -> Dict[str, str]:
-    return {"title": "Manu's Map Game API", "version": __version__}
+    return {
+        "title": "Manu's Map Game API",
+        "version": __version__,
+        "url": ", ".join(origins[1:]),
+    }
 
 
 @app.get("/question")
@@ -35,9 +39,21 @@ def question() -> Dict[str, str]:
     return {"start": start, "end": end}
 
 
+@app.get("/check")
+def check(start: str, end: str) -> bool:
+    return check_question(start, end)
+
+
 @app.post("/result")
-def result(answers: AnswerList) -> Dict[str, (str | List[str])]:
-    verdict, correct_list, wrong_list = answer_check(
-        answers.start, answers.end, answers.item
+def result(answers: AnswerList) -> Dict[str, Any]:
+    verdict, correct_list, wrong_list, shortest_path, boundaries, centroids = (
+        answer_check(answers.start, answers.end, answers.item)
     )
-    return {"result": verdict, "correct_path": correct_list, "wrong_path": wrong_list}
+    return {
+        "result": verdict,
+        "correct_path": correct_list,
+        "wrong_path": wrong_list,
+        "shortest_path": shortest_path,
+        "boundaries": boundaries,
+        "centroids": centroids,
+    }

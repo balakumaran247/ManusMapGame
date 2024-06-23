@@ -1,6 +1,12 @@
 from typing import List, Tuple
 
-from components.helper import make_choice, read_json
+from components.helper import (
+    get_centroids,
+    get_geojson,
+    get_shortestpath,
+    make_choice,
+    read_json,
+)
 
 
 def generate_question() -> Tuple[str, str]:
@@ -16,9 +22,19 @@ def generate_question() -> Tuple[str, str]:
     return make_choice(countries_list, neighbour_data)
 
 
-def answer_check(
-    start: str, end: str, answer_list: List[str]
-) -> Tuple[str, List[str], List[str]]:
+def check_question(start: str, end: str) -> bool:
+    continent_data = read_json(r"./data/continent_countries.json")
+    neighbour = read_json(r"./data/neighbouring_countries.json")
+    check_lists = [
+        continent_data["America"],
+        continent_data["Africa"] + continent_data["Asia"] + continent_data["Europe"],
+    ]
+    return any(
+        start in l and end in l and end not in neighbour[start] for l in check_lists
+    )
+
+
+def answer_check(start: str, end: str, answer_list: List[str]):
     graph_dict = read_json(r"./data/neighbouring_countries.json")
     answer_path = [start] + answer_list + [end]
     correct_list = [start]
@@ -30,5 +46,14 @@ def answer_check(
         else:
             break
     remaining_list = [country for country in answer_path if country not in correct_list]
-    result = "You Won" if len(correct_list) == len(answer_path) else "You Lost"
-    return result, correct_list, remaining_list
+    if len(correct_list) == len(answer_path):
+        result = "You Won"
+        shortest_path = []
+        boundaries = get_geojson(correct_list)
+        centroids = get_centroids(correct_list)
+    else:
+        result = "You Lost"
+        shortest_path = get_shortestpath(start, end)
+        boundaries = get_geojson(shortest_path)
+        centroids = get_centroids(correct_list, remaining_list)
+    return result, correct_list, remaining_list, shortest_path, boundaries, centroids
