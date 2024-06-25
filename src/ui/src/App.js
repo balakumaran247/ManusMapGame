@@ -7,18 +7,22 @@ import StatusContextProvider from "./Context/StatusContextProvider";
 import UrlContextProvider from "./Context/UrlContextProvider";
 import QuestionContextProvider from "./Context/QuestionContextProvider";
 import AnswerContextProvider from "./Context/AnswerContextProvider";
+import { Analytics } from "@vercel/analytics/react";
 
 function App() {
     return (
-        <AnswerContextProvider>
-            <QuestionContextProvider>
-                <UrlContextProvider>
-                    <StatusContextProvider>
-                        <PageDynamics />
-                    </StatusContextProvider>
-                </UrlContextProvider>
-            </QuestionContextProvider>
-        </AnswerContextProvider>
+        <>
+            <AnswerContextProvider>
+                <QuestionContextProvider>
+                    <UrlContextProvider>
+                        <StatusContextProvider>
+                            <PageDynamics />
+                        </StatusContextProvider>
+                    </UrlContextProvider>
+                </QuestionContextProvider>
+            </AnswerContextProvider>
+            <Analytics />
+        </>
     );
 }
 
