@@ -49,6 +49,12 @@ function GameDescription() {
                     md="8"
                     className="justify-content-center align-items-center"
                 >
+                    <p className="text-center">
+                        <strong>A tribute to Manu Raghavan</strong>
+                    </p>
+                    <p>
+                        <strong>About Manu</strong>
+                    </p>
                     <p className="text-justify text-muted">
                         Manu loved maps. His photographic memory made him a
                         master of geography. His favorite game was asking, "If
@@ -70,15 +76,19 @@ function GameDescription() {
                         ones. Connect, laugh, and remember Manu through the joy
                         of his favorite game. Enjoy!
                     </p>
+                    <p>
+                        <strong>How to play the game:</strong>
+                    </p>
                     <p className="text-justify text-muted">
-                        Ex enim mollit laborum laborum. Sint culpa sunt ex
-                        tempor id aliquip fugiat eu consequat sit anim nostrud.
-                        Quis est Lorem cupidatat non dolore adipisicing ipsum
-                        anim. Elit sit aliquip ullamco veniam sit ea. Lorem
-                        deserunt culpa nostrud nostrud. Eiusmod esse amet sunt
-                        cillum reprehenderit excepteur minim dolor do laboris
-                        tempor cillum. Commodo ullamco qui sunt fugiat ea ipsum
-                        magna duis velit enim minim id velit.
+                        Select start at the bottom of this page, it'll take you
+                        to the game page. By default, the game page will provide
+                        a start and end country for the journey? You can either
+                        play with it or change the start and end country by
+                        selecting the 'change question' button. Then select the
+                        countries by choosing them from the drop down menu and
+                        selecting 'add' everytime you choose a new country. Once
+                        you are done with the complete pathway/journey of
+                        countries, hit 'submit'.
                     </p>
                     <div className="text-center mb-5">
                         <Button color="warning" outline onClick={changeStatus}>

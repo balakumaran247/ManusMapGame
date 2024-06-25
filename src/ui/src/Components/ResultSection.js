@@ -125,6 +125,11 @@ const ResultSection = () => {
     const textColorClass =
         result === "You Lost" ? "text-danger" : "text-success";
 
+    const ResultText =
+        result === "You Lost"
+            ? "You need to stare at maps more often, the order was incorrect, please try again!"
+            : "Amazing! Looks like you love maps as much as I do!";
+
     return (
         <div>
             <div ref={LoadingScreen}>
@@ -152,8 +157,8 @@ const ResultSection = () => {
                 <Container className="text-center">
                     <Row>
                         <Col>
-                            <p className={`display-5 ${textColorClass}`}>
-                                {result}
+                            <p className={`${textColorClass}`}>
+                                <strong>{ResultText}</strong>
                             </p>
                         </Col>
                     </Row>
